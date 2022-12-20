@@ -27,7 +27,7 @@ public abstract class SpriteSheetManager {
     var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
     BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
     EntityManager.SetComponentData(e, bh);
-    EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
+    EntityManager.SetSharedComponentManaged(e, spriteSheetMaterial);
     return e;
   }
 
@@ -46,7 +46,7 @@ public abstract class SpriteSheetManager {
     EntityManager.SetComponentData(e, bh);
     EntityManager.SetComponentData(e, new SpriteSheetAnimation {  maxSprites = maxSprites , play = startAnim.playOnStart, samples = startAnim.samples, repetition = startAnim.repetition});
     EntityManager.SetComponentData(e, new SpriteIndex { Value = startAnim.startIndex });
-    EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
+    EntityManager.SetSharedComponentManaged(e, spriteSheetMaterial);
     animator.managedEntity = e;
     SpriteSheetCache.entityAnimator.Add(e, animator);
     return e;
@@ -67,48 +67,50 @@ public abstract class SpriteSheetManager {
       bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
       BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
 
-      EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
+      EntityManager.SetSharedComponentManaged(e, spriteSheetMaterial);
       EntityManager.SetComponentData(e, bh);
     }
     EntityManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
     EntityManager.SetComponentData(e, new SpriteIndex { Value = animation.startIndex });
-    MarkDirty<SpriteSheetColor>(e);
-    MarkDirty<SpriteIndex>(e);
-    MarkDirty<SpriteMatrix>(e);
+    //MarkDirty<SpriteSheetColor>(e);
+    //MarkDirty<SpriteIndex>(e);
+    //MarkDirty<SpriteMatrix>(e);
   }
 
-  public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationData animation, BufferHook hook) {
-    Material oldMaterial = DynamicBufferManager.GetMaterial(hook.bufferEnityID);
-    string oldAnimation = SpriteSheetCache.GetMaterialName(oldMaterial);
-    if(animation.animationName != oldAnimation) {
-      Material material = SpriteSheetCache.GetMaterial(animation.animationName);
-      var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
+    //public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationData animation, BufferHook hook) {
+    //  Material oldMaterial = DynamicBufferManager.GetMaterial(hook.bufferEnityID);
+    //  string oldAnimation = SpriteSheetCache.GetMaterialName(oldMaterial);
+    //  if(animation.animationName != oldAnimation) {
+    //    Material material = SpriteSheetCache.GetMaterial(animation.animationName);
+    //    var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
 
-      //clean old buffer
-      DynamicBufferManager.RemoveBuffer(oldMaterial, hook.bufferID);
+    //    //clean old buffer
+    //    DynamicBufferManager.RemoveBuffer(oldMaterial, hook.bufferID);
 
-      //use new buffer
-      int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-      BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
+    //    //use new buffer
+    //    int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
+    //    BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
 
-      commandBuffer.SetSharedComponent(e, spriteSheetMaterial);
-      commandBuffer.SetComponent(e, bh);
-    }
-    commandBuffer.SetComponent(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
-    commandBuffer.SetComponent(e, new SpriteIndex { Value = animation.startIndex });
-    MarkDirty<SpriteSheetColor>(e, commandBuffer);
-    MarkDirty<SpriteIndex>(e, commandBuffer);
-    MarkDirty<SpriteMatrix>(e, commandBuffer);
-  }
+    //    commandBuffer.SetSharedComponent(e, spriteSheetMaterial);
+    //    commandBuffer.SetComponent(e, bh);
+    //  }
+    //  commandBuffer.SetComponent(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
+    //  commandBuffer.SetComponent(e, new SpriteIndex { Value = animation.startIndex });
+    //  MarkDirty<SpriteSheetColor>(e, commandBuffer);
+    //  MarkDirty<SpriteIndex>(e, commandBuffer);
+    //  MarkDirty<SpriteMatrix>(e, commandBuffer);
+    //}
 
-  public static void MarkDirty<T>(Entity e) where T : struct , IComponentData {
-    EntityManager.SetComponentData(e, entityManager.GetComponentData<T>(e));
-  }
-  public static void MarkDirty<T>(Entity e,EntityCommandBuffer ecb) where T : struct, IComponentData {
-    ecb.SetComponent(e, entityManager.GetComponentData<T>(e));
-  }
+    //public static void MarkDirty<T>(Entity e) where T : struct, IComponentData
+    //{
+    //    EntityManager.SetComponentData(e, entityManager.GetComponentData<T>(e));
+    //}
+    //public static void MarkDirty<T>(Entity e, EntityCommandBuffer ecb) where T : struct, IComponentData
+    //{
+    //    ecb.SetComponent(e, entityManager.GetComponentData<T>(e));
+    //}
 
-  public static void UpdateEntity(Entity entity, IComponentData componentData) {
+    public static void UpdateEntity(Entity entity, IComponentData componentData) {
     EntityManager.SetComponentData(entity, (dynamic)componentData);
   }
 

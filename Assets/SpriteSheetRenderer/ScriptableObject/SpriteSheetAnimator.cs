@@ -30,18 +30,18 @@ public abstract class SpriteSheetAnimator: ScriptableObject {
     }
   }
 
-  public static void Play(EntityCommandBuffer buffer, Entity e,BufferHook hook, string animationName = ""){
-    SpriteSheetAnimator animator = SpriteSheetCache.GetAnimator(e);
-    if(animationName == "")
-      animationName = animator.animations[animator.currentAnimationIndex].name;
-    int i = 0;
-    foreach(SpriteSheetAnimationData animation in animator.animations) {
-      if(animation.animationName == animationName) {
-        SpriteSheetManager.SetAnimation(buffer, e, animation,hook);
-        animator.currentAnimationIndex = i;
-        return;
-      }
-      i++;
-    }
-  }
+  //public static void Play(EntityCommandBuffer buffer, Entity e,BufferHook hook, string animationName = ""){
+  //  SpriteSheetAnimator animator = SpriteSheetCache.GetAnimator(e);
+  //  if(animationName == "")
+  //    animationName = animator.animations[animator.currentAnimationIndex].name;
+  //  int i = 0;
+  //  foreach(SpriteSheetAnimationData animation in animator.animations) {
+  //    if(animation.animationName == animationName) {
+  //      SpriteSheetManager.SetAnimation(buffer, e, animation,hook);
+  //      animator.currentAnimationIndex = i;
+  //      return;
+  //    }
+  //    i++;
+  //  }
+  //}
 }

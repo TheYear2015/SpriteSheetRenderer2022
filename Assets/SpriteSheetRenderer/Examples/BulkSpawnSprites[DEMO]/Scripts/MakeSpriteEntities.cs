@@ -52,7 +52,7 @@ namespace ECSSpriteSheetAnimation.Examples {
         SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
         eManager.SetComponentData(e, col);
         eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
-        eManager.SetSharedComponentData(e, material);
+        eManager.SetSharedComponentManaged(e, material);
       }
     }
     private void OnDrawGizmosSelected() {
